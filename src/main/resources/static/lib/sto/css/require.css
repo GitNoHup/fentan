@@ -1,0 +1,5 @@
+.form-require:before {
+	content: '* ';
+	color: red;
+	font-weight: bold;
+}

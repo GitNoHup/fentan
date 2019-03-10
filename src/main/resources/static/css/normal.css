@@ -1,0 +1,28 @@
+.display-block{
+    width: 16px;
+    height: 16px;
+}
+.bg_green{
+    background: #18A890;
+}
+.bg_yellow{
+    background: #F0C030;
+}
+.bg_red{
+    background: #FF0030;
+}
+.element-place{
+    float: right;
+}
+.element-middle{
+    vertical-align: middle;
+}
+.font_yellow{
+    color: #F0C030;
+}
+.font_green{
+    color: #18A890;
+}
+.font_red{
+    color: #FF0030;
+}

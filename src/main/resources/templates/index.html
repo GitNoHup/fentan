@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome Page</title>
+    <link type="text/css" href="/css/index.css" rel="stylesheet"/>
+    <link type="text/css" href="/layerui/css/layui.css" rel="stylesheet"/>
+    <body>
+    <div style="text-align:center;">
+        <p style="font-size: 120px;font-family: Consolas;">Analysis Charts</p>
+    </div>
+    <div style="text-align:center;">
+        <button class="layui-btn layui-btn-primary layui-btn-small btnName" data-type="upload">
+            <i class="iconfont">&#10010; </i> 点这里
+        </button>
+    </div>
+
+    <div id="batchFormBox" style="display: none">
+        <div class="ibox border_n">
+            <div class="ibox_form">
+                <form class="layui-form-item layui-form-pane layui-form pl-20 pb-20 pt-10 pr-20" id="batchForm"
+                      enctype="multipart/form-data">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">上传文件</label>
+                        <div class="layui-input-block">
+                            <input type="file" placeholder="请输入" id="file" name="file" class="layui-input">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </body>
+    <script type="text/javascript" src="/lib/jquery/jquery.js"></script>
+    <script type="text/javascript" src="/lib/bootstrapTable/bootstrap-table.js"></script>
+    <script type="text/javascript" src="/lib/bootstrapTable/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/lib/bootstrapTable/bootstrap-table-export.js"></script>
+    <script type="text/javascript" src="/lib/bootstrapTable/tableExport.js"></script>
+    <script type="text/javascript" src="/lib/bootstrapTable/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="/lib/layerui/layui.js"></script>
+    <script type="text/javascript" src="/lib/sto/sto.js"></script>
+    <script>
+        layui.use(['layer', 'form', 'layedit', 'laydate', 'test', 'autocomplete', 'jstree', 'http'], function () {
+            var form = layui.form()
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate
+                , test = layui.test
+                , autocomplete = layui.autocomplete
+                , jstree = layui.jstree
+                , http = layui.http;
+            test.restVal();
+            test.selectMove();
+            test.formToggle({
+                ifTableResize: true
+            });
+
+            var active = {
+                upload: function () {
+                    layer.open({
+                        type: 1,
+                        title: 'Excel上传',
+                        area: ['800px', '400px'],
+                        content: $('#batchFormBox'),
+                        btn: ['确定', '取消'],
+                        yes: function (index, layero) {
+                            var form = new FormData(document.getElementById("batchForm"));
+                            $.ajax({
+                                url: "/fentan/upload",
+                                type: "POST",
+                                data: form,
+                                processData: false,
+                                contentType: false,
+                                success: function (response) {
+                                    if (response.respCode != "000") {
+                                        layer.msg(!response.resMessage ? "服务异常" : response.resMessage, {icon: 5});
+                                        return;
+                                    }
+
+                                    uploadData.data = response.data;
+                                    console.log(uploadData.data)
+                                    layer.open({
+                                        type: 2,
+                                        title: '',
+                                        area: ['1100px', '700px'],
+                                        content: '/import/preview'
+                                    });
+                                    layer.close(index);
+                                },
+                                error: function (e) {
+                                    alert("错误！！");
+                                }
+                            })
+                        }
+                    })
+                }
+            }
+
+            $('.btnName').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+
+        });
+    </script>
+</head>
+</html>
