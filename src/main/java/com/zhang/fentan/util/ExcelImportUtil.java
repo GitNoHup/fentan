@@ -1,8 +1,9 @@
 package com.zhang.fentan.util;
 
-import org.apache.el.util.ReflectionUtil;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class ExcelImportUtil {
                 continue;
             }
 
-            for (int j = 1; j <= fileds.length; j++) {
+            for (int j = 0; j < fileds.length; j++) {
                 Cell cell = row.getCell(j);
                 if (cell == null) {
                     continue;
@@ -45,7 +46,7 @@ public class ExcelImportUtil {
                 cell.setCellType(Cell.CELL_TYPE_STRING);
 
                 String content = cell.getStringCellValue();
-                ReflectionUtil.setFieldValue(instance, fileds[j - 1], content != null ? content.trim() : content);
+                ReflectionUtil.setFieldValue(instance, fileds[j], content != null ? content.trim() : content);
             }
 
             list.add(instance);
@@ -56,11 +57,17 @@ public class ExcelImportUtil {
 
 
     public static Workbook createWorkbook(InputStream stream) {
+
         try {
             return WorkbookFactory.create(stream);
-        } catch (Exception e) {
-            throw new ServiceException("解析EXCEL文件异常");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidFormatException e) {
+            e.printStackTrace();
         }
+
+        return null;
+
     }
 
 }

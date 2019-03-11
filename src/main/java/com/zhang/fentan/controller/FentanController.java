@@ -1,6 +1,9 @@
 package com.zhang.fentan.controller;
 
+import com.zhang.fentan.dto.ExcelDto;
+import com.zhang.fentan.service.FentanService;
 import com.zhang.fentan.util.ExcelImportUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,10 +12,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * @Description TODO
+ * @Description
  * @Date 2019-03-08 16:26
  * @Created Mr.zhang
  */
@@ -20,6 +24,14 @@ import java.util.Map;
 @RequestMapping("/fentan")
 public class FentanController {
 
+    @Autowired
+    FentanService fentanService;
+
+    /**
+     * 读入excel
+     * @param file
+     * @throws Exception
+     */
     @PostMapping("/upload")
     public void upload(@RequestParam("file") MultipartFile file) throws Exception {
         if (file.isEmpty()) {
@@ -28,22 +40,30 @@ public class FentanController {
         try {
             Map<String, Object> resultMap = new HashMap<String, Object>();
             Map<String, String> headMap = new HashMap<String, String>();
-            headMap.put("pdaCode", "巴枪唯一码");
-            headMap.put("supplierCode", "供应商编码");
-            headMap.put("supplierName", "供应商名称");
-            headMap.put("pdaType", "产品类型");
+            headMap.put("route", "线路");
+            headMap.put("center_one", "转运中心1");
+            headMap.put("scale_one", "分摊比例1");
+            headMap.put("center_two", "转运中心2");
+            headMap.put("scale_two", "分摊比例2");
+            headMap.put("center_three", "转运中心3");
+            headMap.put("scale_three", "分摊比例3");
+            headMap.put("center_four", "转运中心4");
+            headMap.put("scale_four", "分摊比例4");
+            headMap.put("center_five", "转运中心5");
+            headMap.put("scale_five", "分摊比例5");
 
             InputStream inputStream = file.getInputStream();
-            String[] fileds = {"pdaCode", "supplierCode", "supplierName", "pdaType"};
+            String[] fileds = {"route", "center_one", "scale_one", "center_two", "scale_two", "center_three", "scale_three", "center_four", "scale_four", "center_five", "scale_five"};
 
-            List<PdaRegisterExcelDto> excelData = ExcelImportUtil.importExcel(inputStream, PdaRegisterExcelDto.class, fileds);
-            // 校验excel文件数据
-            pdaResisterService.checkExcelData(excelData);
+            List<ExcelDto> excelData = ExcelImportUtil.importExcel(inputStream, ExcelDto.class, fileds);
+
+            fentanService.countFenTan(excelData);
+
             resultMap.put("head", headMap);
             resultMap.put("datas", excelData);
-            return buildSuccessed(resultMap);
+//            return buildSuccessed(resultMap);
         } catch (Exception e) {
-            return buildFailed(e.getMessage());
+//            return buildFailed(e.getMessage());
         }
     }
 }
