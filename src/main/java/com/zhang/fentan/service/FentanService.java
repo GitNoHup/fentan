@@ -31,16 +31,42 @@ public class FentanService {
             }
         }
 
+        //始发站和结束站分写出来
+        List<ExcelDto> errorData = new ArrayList<>();
+        for(ExcelDto excelDto : dealData){
+            String[] routes = excelDto.getRoute().split("-");
+            if(routes != null && routes.length > 1){
+                excelDto.setStart_site(routes[0]);
+                excelDto.setEnd_site(routes[routes.length-1]);
+            } else {
+                //无法解析的数据存起来
+                errorData.add(excelDto);
+            }
+        }
+
         List<ExcelDto> resultData = new ArrayList<>();
         for(ExcelDto excelDto : dealData){
-            String centerOne = excelDto.getCenter_one();
-            for(ExcelDto containDto : dealData){
-                if(StringUtils.equals(centerOne, containDto.getCenter_two())
-                        && (!StringUtils.equals(excelDto.getScale_one(), containDto.getScale_two())
-                        || !StringUtils.equals(excelDto.getScale_two(), containDto.getScale_one()))){
 
+            boolean flag = true;
+            List<ExcelDto> tempData = new ArrayList<>();
+
+            for(ExcelDto containDto : dealData){
+                if(StringUtils.equals(excelDto.getStart_site(), containDto.getEnd_site())){
+                    tempData.add(containDto);
+                    if(!StringUtils.equals(excelDto.getScale_one(), containDto.getScale_two())
+                            || !StringUtils.equals(excelDto.getScale_two(), containDto.getScale_one())){
+                        flag = false;
+                    }
                 }
             }
+
+            if(!flag){
+                for(ExcelDto tempDto : tempData){
+                    dealData.add(tempDto);
+                }
+            }
+
+            //todo 重复数据问题
         }
 
         return dealData;

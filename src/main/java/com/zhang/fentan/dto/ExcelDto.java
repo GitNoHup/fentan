@@ -32,4 +32,8 @@ public class ExcelDto {
 
     private String scale_five;
 
+    private String start_site;
+
+    private String end_site;
+
 }
