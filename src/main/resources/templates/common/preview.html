@@ -1,0 +1,99 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="renderer" content="webkit|ie-comp|ie-stand" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<title>申通快递.巴枪平台</title>
+	<link rel="stylesheet" href="/lib/sto/css/sto.css" />
+	<style type="text/css">
+		body{
+			height: 100%;
+			box-sizing: border-box;
+		}
+	</style>
+</head>
+<body class="pd-10 bg_white overflow_x_h">
+	<div class="page_head">
+		<span class="page_title">数据预览</span>
+	</div>
+	<div class="main_b mt-40 animated fadeInRight overflow_x_h">
+		<div class="ibox">
+			<div class="ibox_table">
+				<table id="table" data-pagination="true">
+					<thead>
+					<tr>
+						<th data-field="route" data-align="center" data-width="150">线路</th>
+						<th data-field="center_one" data-align="center" data-width="80">转运中心1</th>
+						<th data-field="scale_one" data-align="center" data-width="60">分摊比例1</th>
+						<th data-field="center_two" data-align="center" data-width="80">转运中心2</th>
+						<th data-field="scale_two" data-align="center" data-width="60">分摊比例2</th>
+						<th data-field="center_three" data-align="center" data-width="80">转运中心3</th>
+						<th data-field="scale_three" data-align="center" data-width="60">分摊比例3</th>
+						<th data-field="center_four" data-align="center" data-width="80">转运中心4</th>
+						<th data-field="scale_four" data-align="center" data-width="60">分摊比例4</th>
+						<th data-field="center_five" data-align="center" data-width="80">转运中心5</th>
+						<th data-field="scale_five" data-align="center" data-width="60">分摊比例5</th>
+					</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="/lib/jquery/jquery.js"></script>
+	<script type="text/javascript" src="/lib/bootstrapTable/bootstrap-table.js"></script>
+	<script type="text/javascript" src="/lib/bootstrapTable/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/lib/bootstrapTable/bootstrap-table-export.js"></script>
+	<script type="text/javascript" src="/lib/bootstrapTable/tableExport.js"></script>
+	<script type="text/javascript" src="/lib/bootstrapTable/bootstrap-table-zh-CN.min.js"></script>
+	<script type="text/javascript" src="/lib/layerui/layui.js"></script>
+	<script type="text/javascript" src="/lib/sto/sto.js"></script>
+	<script>
+		$(function(){
+			setTableHeight();
+		});
+	
+		function tableHeight() {
+			return  $(window).height() - $('#ibox').outerHeight() - $('.page_head').outerHeight() - 69;
+		}
+	
+		function setTableHeight(){
+			$('#table').bootstrapTable('resetView', {
+				height: tableHeight()	
+			});
+			$(window).resize(function() {
+				$('#table').bootstrapTable('resetView', {
+					height: tableHeight()
+				})
+			})
+		}
+
+        function initColumns() {
+            var columns = [];
+
+            var head = parent.uploadData.head;
+            for (i in head) {
+                columns.push({field: i, title: head[i]})
+            }
+            return columns;
+        }
+
+        $('#table').bootstrapTable({
+            striped : true,
+            undefinedText : "",
+            pagination : true,
+            pageNumber : 1,
+            pageSize : 20,
+            height : tableHeight(),
+            clickToSelect : true,
+            uniqueId: "id",
+            //columns : initColumns(),
+            data : parent.uploadData.datas,
+            showExport: true,
+            exportDataType: "all"
+        });
+	</script>
+</body>
+</html>

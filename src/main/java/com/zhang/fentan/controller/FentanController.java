@@ -33,12 +33,14 @@ public class FentanController {
      * @throws Exception
      */
     @PostMapping("/upload")
-    public void upload(@RequestParam("file") MultipartFile file) throws Exception {
+    public Map<String, Object> upload(@RequestParam("file") MultipartFile file) throws Exception {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
         if (file.isEmpty()) {
             //todo
         }
         try {
-            Map<String, Object> resultMap = new HashMap<String, Object>();
+
             Map<String, String> headMap = new HashMap<String, String>();
             headMap.put("route", "线路");
             headMap.put("center_one", "转运中心1");
@@ -57,13 +59,13 @@ public class FentanController {
 
             List<ExcelDto> excelData = ExcelImportUtil.importExcel(inputStream, ExcelDto.class, fileds);
 
-            fentanService.countFenTan(excelData);
+            List<ExcelDto> resultData = fentanService.countFenTan(excelData);
 
             resultMap.put("head", headMap);
-            resultMap.put("datas", excelData);
-//            return buildSuccessed(resultMap);
+            resultMap.put("datas", resultData);
         } catch (Exception e) {
-//            return buildFailed(e.getMessage());
+
         }
+        return resultMap;
     }
 }

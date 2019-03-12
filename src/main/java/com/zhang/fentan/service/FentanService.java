@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class FentanService {
 
-    public void countFenTan(List<ExcelDto> excelData){
+    public List<ExcelDto> countFenTan(List<ExcelDto> excelData){
         //剔除多个转运中心的数据
         List<ExcelDto> dealData = new ArrayList<>();
         for(ExcelDto excelDto : excelData){
@@ -38,9 +38,11 @@ public class FentanService {
                 if(StringUtils.equals(centerOne, containDto.getCenter_two())
                         && (!StringUtils.equals(excelDto.getScale_one(), containDto.getScale_two())
                         || !StringUtils.equals(excelDto.getScale_two(), containDto.getScale_one()))){
-                    
+
                 }
             }
         }
+
+        return dealData;
     }
 }

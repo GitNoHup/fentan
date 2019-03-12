@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome Page</title>
-    <link type="text/css" href="/css/index.css" rel="stylesheet"/>
-    <link type="text/css" href="/layerui/css/layui.css" rel="stylesheet"/>
     <body>
     <div style="text-align:center;">
         <p style="font-size: 120px;font-family: Consolas;">Analysis Charts</p>
@@ -40,6 +38,8 @@
     <script type="text/javascript" src="/lib/layerui/layui.js"></script>
     <script type="text/javascript" src="/lib/sto/sto.js"></script>
     <script>
+        var uploadData = {};
+
         layui.use(['layer', 'form', 'layedit', 'laydate', 'test', 'autocomplete', 'jstree', 'http'], function () {
             var form = layui.form()
                 , layer = layui.layer
@@ -72,17 +72,17 @@
                                 processData: false,
                                 contentType: false,
                                 success: function (response) {
-                                    if (response.respCode != "000") {
-                                        layer.msg(!response.resMessage ? "服务异常" : response.resMessage, {icon: 5});
-                                        return;
-                                    }
 
-                                    uploadData.data = response.data;
-                                    console.log(uploadData.data)
+                                    console.log(response["head"]);
+                                    console.log(response["datas"]);
+
+                                    uploadData.head = response["head"];
+                                    uploadData.datas = response["datas"];
+
                                     layer.open({
                                         type: 2,
                                         title: '',
-                                        area: ['1100px', '700px'],
+                                        area: ['1400px', '700px'],
                                         content: '/import/preview'
                                     });
                                     layer.close(index);
