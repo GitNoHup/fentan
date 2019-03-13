@@ -62,13 +62,13 @@ public class FentanService {
 
             if(!flag){
                 for(ExcelDto tempDto : tempData){
-                    dealData.add(tempDto);
+                    resultData.add(tempDto);
                 }
             }
 
             //todo 重复数据问题
         }
 
-        return dealData;
+        return resultData;
     }
 }
