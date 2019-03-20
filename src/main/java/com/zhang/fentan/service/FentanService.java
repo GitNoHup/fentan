@@ -31,21 +31,12 @@ public class FentanService {
             }
         }
 
-        //始发站和结束站分写出来
-        List<ExcelDto> errorData = new ArrayList<>();
-        for(ExcelDto excelDto : dealData){
-            String[] routes = excelDto.getRoute().split("-");
-            if(routes != null && routes.length > 1){
-                excelDto.setStart_site(routes[0]);
-                excelDto.setEnd_site(routes[routes.length-1]);
-            } else {
-                //无法解析的数据存起来
-                errorData.add(excelDto);
-            }
-        }
-
         List<ExcelDto> resultData = new ArrayList<>();
-        for(ExcelDto excelDto : dealData){
+
+        int listSize = dealData.size();
+        
+
+/*        for(ExcelDto excelDto : dealData){
 
             boolean flag = true;
             List<ExcelDto> tempData = new ArrayList<>();
@@ -66,8 +57,7 @@ public class FentanService {
                 }
             }
 
-            //todo 重复数据问题
-        }
+        }*/
 
         return resultData;
     }
