@@ -31,9 +31,25 @@ public class FentanService {
             }
         }
 
-        List<ExcelDto> resultData = new ArrayList<>();
+        List<ExcelDto> errorData = new ArrayList<>();
+        for(ExcelDto excelDto : dealData){
+            if(Integer.parseInt(excelDto.getScale_one())+Integer.parseInt(excelDto.getScale_two()) != 1){
+                errorData.add(excelDto);
+            }
+        }
 
-        int listSize = dealData.size();
+        List<ExcelDto> resultData = new ArrayList<>();
+        for(ExcelDto excelDto : errorData){
+            for(ExcelDto tempDto : dealData){
+                if(StringUtils.equals(excelDto.getCenter_one(),tempDto.getCenter_one())
+                        &&StringUtils.equals(excelDto.getCenter_two(),tempDto.getCenter_two())
+                        ||StringUtils.equals(excelDto.getCenter_one(),tempDto.getCenter_two())
+                        &&StringUtils.equals(excelDto.getCenter_two(),tempDto.getCenter_one())
+                ){
+
+                }
+            }
+        }
         
 
 /*        for(ExcelDto excelDto : dealData){
