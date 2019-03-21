@@ -10,6 +10,8 @@ import lombok.Data;
 @Data
 public class ExcelDto {
 
+    private int id;
+
     private String route;
 
     private String center_one;

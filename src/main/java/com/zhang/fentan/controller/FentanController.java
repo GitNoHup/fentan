@@ -1,13 +1,12 @@
 package com.zhang.fentan.controller;
 
+import com.zhang.fentan.dto.DetailDto;
 import com.zhang.fentan.dto.ExcelDto;
+import com.zhang.fentan.exception.AuthorException;
 import com.zhang.fentan.service.FentanService;
 import com.zhang.fentan.util.ExcelImportUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -33,11 +32,13 @@ public class FentanController {
      * @throws Exception
      */
     @PostMapping("/upload")
-    public Map<String, Object> upload(@RequestParam("file") MultipartFile file) throws Exception {
+    public Map<String, Object> upload(@RequestParam("file") MultipartFile file){
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
         if (file.isEmpty()) {
-            //todo
+            resultMap.put("head", "000");
+            resultMap.put("datas", "请选择需要导入的文件");
+            return resultMap;
         }
         try {
 
@@ -63,9 +64,37 @@ public class FentanController {
 
             resultMap.put("head", headMap);
             resultMap.put("datas", resultData);
+            return resultMap;
+        } catch (AuthorException e) {
+            resultMap.put("head", "000");
+            resultMap.put("datas", e.getMessage());
+            return resultMap;
         } catch (Exception e) {
-
+            resultMap.put("head", "000");
+            resultMap.put("datas", "系统异常请联系管理员");
+            return resultMap;
         }
-        return resultMap;
+
     }
+
+    @PostMapping("/detail")
+    public Map<String, Object> detail(@RequestBody DetailDto detailDto){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        try{
+            List<ExcelDto> resultData = fentanService.getDetail(detailDto);
+            resultMap.put("head", "111");
+            resultMap.put("datas", resultData);
+            return resultMap;
+        } catch (AuthorException e){
+            resultMap.put("head", "000");
+            resultMap.put("datas", e.getMessage());
+            return resultMap;
+        } catch (Exception e){
+            resultMap.put("head", "000");
+            resultMap.put("datas", "系统异常请联系管理员");
+            return resultMap;
+        }
+    }
+
 }

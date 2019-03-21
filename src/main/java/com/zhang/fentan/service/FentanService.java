@@ -1,10 +1,13 @@
 package com.zhang.fentan.service;
 
+import com.zhang.fentan.dto.DetailDto;
 import com.zhang.fentan.dto.ExcelDto;
+import com.zhang.fentan.exception.AuthorException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +20,12 @@ import java.util.List;
 @Service
 public class FentanService {
 
+    public static List<ExcelDto> dealData = new ArrayList<>();
+
     public List<ExcelDto> countFenTan(List<ExcelDto> excelData){
         //剔除多个转运中心的数据
-        List<ExcelDto> dealData = new ArrayList<>();
+        dealData.clear();
+        int rowNum = 1;
         for(ExcelDto excelDto : excelData){
             if(StringUtils.isBlank(excelDto.getCenter_three())
                     && StringUtils.isBlank(excelDto.getScale_three())
@@ -27,54 +33,41 @@ public class FentanService {
                     && StringUtils.isBlank(excelDto.getScale_four())
                     && StringUtils.isBlank(excelDto.getCenter_five())
                     && StringUtils.isBlank(excelDto.getScale_five())){
+                excelDto.setId(rowNum++);
                 dealData.add(excelDto);
             }
         }
 
-        List<ExcelDto> errorData = new ArrayList<>();
-        for(ExcelDto excelDto : dealData){
-            if(Integer.parseInt(excelDto.getScale_one())+Integer.parseInt(excelDto.getScale_two()) != 1){
-                errorData.add(excelDto);
-            }
-        }
-
         List<ExcelDto> resultData = new ArrayList<>();
-        for(ExcelDto excelDto : errorData){
-            for(ExcelDto tempDto : dealData){
-                if(StringUtils.equals(excelDto.getCenter_one(),tempDto.getCenter_one())
-                        &&StringUtils.equals(excelDto.getCenter_two(),tempDto.getCenter_two())
-                        ||StringUtils.equals(excelDto.getCenter_one(),tempDto.getCenter_two())
-                        &&StringUtils.equals(excelDto.getCenter_two(),tempDto.getCenter_one())
-                ){
+        for(ExcelDto excelDto : dealData){
+            try {
+                BigDecimal flagNum = new BigDecimal("1");
+                BigDecimal scaleOne = new BigDecimal(excelDto.getScale_one());
+                BigDecimal scaleTwo = new BigDecimal(excelDto.getScale_two());
+                BigDecimal addResult = scaleOne.add(scaleTwo);
 
+                if(flagNum.compareTo(addResult) != 0){
+                    resultData.add(excelDto);
                 }
+            } catch (Exception e){
+                throw new AuthorException("请检查数据格式：线路："+excelDto.getRoute());
             }
         }
-        
 
-/*        for(ExcelDto excelDto : dealData){
+        return resultData;
+    }
 
-            boolean flag = true;
-            List<ExcelDto> tempData = new ArrayList<>();
-
-            for(ExcelDto containDto : dealData){
-                if(StringUtils.equals(excelDto.getStart_site(), containDto.getEnd_site())){
-                    tempData.add(containDto);
-                    if(!StringUtils.equals(excelDto.getScale_one(), containDto.getScale_two())
-                            || !StringUtils.equals(excelDto.getScale_two(), containDto.getScale_one())){
-                        flag = false;
-                    }
-                }
+    public List<ExcelDto> getDetail(DetailDto detailDto){
+        List<ExcelDto> resultData = new ArrayList<>();
+        for(ExcelDto excelDto : dealData){
+            if(StringUtils.equals(excelDto.getCenter_one(),detailDto.getCenterOne())
+                    &&StringUtils.equals(excelDto.getCenter_two(),detailDto.getCenterTwo())
+                    ||StringUtils.equals(excelDto.getCenter_one(),detailDto.getCenterTwo())
+                    &&StringUtils.equals(excelDto.getCenter_two(),detailDto.getCenterOne())
+                    ){
+                resultData.add(excelDto);
             }
-
-            if(!flag){
-                for(ExcelDto tempDto : tempData){
-                    resultData.add(tempDto);
-                }
-            }
-
-        }*/
-
+        }
         return resultData;
     }
 }

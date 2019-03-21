@@ -11,4 +11,10 @@ public class PreviewController {
     public String index() {
         return "/common/preview";
     }
+
+    @RequestMapping(value = "detail")
+    public String detail() {
+        return "/common/detail";
+    }
+
 }

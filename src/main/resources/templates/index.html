@@ -65,26 +65,31 @@
                         btn: ['确定', '取消'],
                         yes: function (index, layero) {
                             var form = new FormData(document.getElementById("batchForm"));
+
                             $.ajax({
                                 url: "/fentan/upload",
                                 type: "POST",
                                 data: form,
+                                async: false,
                                 processData: false,
                                 contentType: false,
                                 success: function (response) {
 
-                                    console.log(response["head"]);
-                                    console.log(response["datas"]);
-
                                     uploadData.head = response["head"];
                                     uploadData.datas = response["datas"];
 
+                                    if (response["head"] == "000") {
+                                        layer.msg(response["datas"], {icon: 5});
+                                        return;
+                                    }
+
                                     layer.open({
                                         type: 2,
-                                        title: '',
+                                        title: '分摊比例异常数据',
                                         area: ['1400px', '700px'],
                                         content: '/import/preview'
                                     });
+                                    // location.href="/import/preview";
                                     layer.close(index);
                                 },
                                 error: function (e) {
