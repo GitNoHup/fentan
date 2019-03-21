@@ -4,17 +4,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(value = "import")
+@RequestMapping("/import")
 public class PreviewController {
 
-    @RequestMapping(value = "preview")
+    @RequestMapping("/preview")
     public String index() {
-        return "/common/preview";
+        return "common/preview";
     }
 
-    @RequestMapping(value = "detail")
+    @RequestMapping("/detail")
     public String detail() {
-        return "/common/detail";
+        return "common/detail";
     }
 
 }

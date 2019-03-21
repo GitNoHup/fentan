@@ -4,10 +4,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(value = "index")
+@RequestMapping("/index")
 public class IndexController {
 
-    @RequestMapping(value = "welcome")
+    @RequestMapping("/welcome")
     public String index() {
         return "index";
     }
